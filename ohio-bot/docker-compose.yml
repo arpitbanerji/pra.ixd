@@ -1,0 +1,39 @@
+services:
+  ohbot:
+    build: .
+    image: ohbot:latest
+    container_name: ohbot
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # Persisted on the volume below.
+      DB_PATH: /data/ohbot.sqlite3
+      HEALTH_PORT: "8080"
+    volumes:
+      - ohbot-data:/data
+    # Lets the container reach an agent server running on the Docker host.
+    # Remove this if OPENHANDS_MODE=cloud.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      # Health endpoint only; bound to localhost so it is not publicly exposed.
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8080/', timeout=4).status == 200 else 1)"
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  ohbot-data:
