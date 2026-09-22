@@ -1,4 +1,9 @@
-# ohbot — chat with OpenHands from Telegram
+# Ohio (ohbot) — a pra.ixd product
+
+Ohio is a product of [pra.ixd](https://pra.ixd), providing a Telegram interface
+for driving OpenHands agents remotely.
+
+## About Ohio
 
 A Dockerised Telegram bot that turns your Telegram messages into prompts for an
 OpenHands agent and streams the answers back to your phone. One Telegram chat
